@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "",
   "main": "webpack.config.js",
+  "prisma": {
+    "seed": "node --require esbuild-register prisma/seed.ts"
+  },
   "scripts": {
     "build": "webpack",
     "start": "webpack --watch"
@@ -26,10 +29,18 @@
   },
   "dependencies": {
     "@prisma/client": "^4.13.0",
+    "@supabase/supabase-js": "^2.21.0",
+    "@types/axios": "^0.14.0",
+    "@types/bcrypt": "^5.0.0",
+    "@types/cors": "^2.8.13",
     "@types/dotenv": "^8.2.0",
+    "axios": "^1.3.6",
+    "bcrypt": "^5.1.0",
     "bcryptjs": "^2.4.3",
     "cookie-parser": "^1.4.6",
+    "cors": "^2.8.5",
     "dotenv": "^16.0.3",
+    "esbuild-register": "^3.4.2",
     "express": "^4.18.2",
     "express-handlebars": "^7.0.7",
     "express-session": "^1.17.3",
