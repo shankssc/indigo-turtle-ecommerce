@@ -5,7 +5,7 @@ import { Formik, Form, Field } from 'formik';
 import { useNavigate } from 'react-router-dom';
 import { useSelector,useDispatch } from 'react-redux';
 import store,{ selectUser,auth,logout } from '../../store';
-import type {UserState} from '../../store';
+import type { UserSession } from '../../global';
 import urls from '../../config'
 import { z } from 'zod'
 import {toFormikValidationSchema} from 'zod-formik-adapter';
@@ -32,7 +32,7 @@ export default function Auth(): JSX.Element {
   const navigate = useNavigate();
   const instance = axios.create({
     // baseURL: 'http://localhost:3001/api',
-    baseURL: `${urls.SERVER_URL}`,
+    baseURL: `${urls.SERVER_URL_FINAL}`,
     withCredentials: true,
   });
 
@@ -77,7 +77,7 @@ export default function Auth(): JSX.Element {
             address: values.address,
           });
 
-      const payload: UserState = {
+      const payload: UserSession = {
         id: response.data.id,
         username: response.data.username,
         email: response.data.email,
@@ -110,47 +110,43 @@ export default function Auth(): JSX.Element {
         validationSchema={toFormikValidationSchema(schema)}
       >
 
-    {({ values, handleChange, handleBlur, handleSubmit }) => (
-    <div className="Auth">
-      <div className="Container bg-indigo-500">
-        <h2>{isSignIn?'Sign In' : 'Sign up'}</h2>
-        <div className="Toggle">
-          <div
-            className={isSignIn ? 'ToggleBtn Active' : 'ToggleBtn'}
-            onClick={toggleSwitch}
-          />
-          <div
-            className={!isSignIn ? 'ToggleBtn Active' : 'ToggleBtn'}
-            onClick={toggleSwitch}
-          />
-        </div>
-        <Form>
-        {isSignIn ? null : (
-          <>
-          <label>Username: </label>
-          <Field type="text" 
-                 name="username" 
-                 value={values.username} 
-                 onChange={handleChange} />
-          </>
-        )}
+{({ values, handleChange, handleBlur, handleSubmit }) => (
+        <div className="Auth">
+          <div className="Container bg-indigo-500">
+            <h2>{isSignIn ? 'Sign In' : 'Sign up'}</h2>
+            <div className="Toggle">
+              <div
+                className={isSignIn ? 'ToggleBtn Active' : 'ToggleBtn'}
+                onClick={toggleSwitch}
+              />
+              <div
+                className={!isSignIn ? 'ToggleBtn Active' : 'ToggleBtn'}
+                onClick={toggleSwitch}
+              />
+            </div>
+            <Form>
+            {isSignIn ? null : (
+                <>
+              <label>Username: </label>
+              <Field
+                type="text"
+                name="username"
+                value={values.username}
+                onChange={handleChange}
+              />
+              </>
+            )}
 
-          <label>Email: </label>
-          <Field type="text" 
-                 name="email" 
-                 value={values.email} 
-                 onChange={handleChange} />
-      
-
-          <label>Password: </label>
-          <Field type="password" 
-                 name="password" 
-                 value={values.password} 
-                 onChange={handleChange} />
-
-          {isSignIn ? null : (
-            <>
-              <label>Confirm Password: </label>
+              
+              <label>Email: </label>
+              <Field
+                type="text"
+                name="email"
+                value={values.email}
+                onChange={handleChange}
+              />
+                
+              <label>Password: </label>
               <Field
                 type="password"
                 name="password"

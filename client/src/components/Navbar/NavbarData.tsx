@@ -8,7 +8,7 @@ import { useSelector } from 'react-redux';
 import { selectCart, selectUser } from '../../store';
 import { IconType } from 'react-icons';
 import axios from 'axios';
-import { SERVER_URL } from '../../config';
+import urls from '../../config';
 import { spawn } from 'child_process';
 
 interface CheckoutProductData {
@@ -53,11 +53,11 @@ const CartLink = ({
   }));
 
   const getCheckout = async (): Promise<string> =>
-    await axios.post(`${SERVER_URL}/api/checkout`, { products: prods });
+    await axios.post(`${urls.SERVER_URL_FINAL}/api/checkout`, { products: prods });
 
   const cartClicked = (): void => {
     (async (): Promise<void> => {
-      console.log(SERVER_URL);
+      console.log(urls.SERVER_URL_FINAL);
       const url = await getCheckout();
       console.log(url);
       window.open(url);

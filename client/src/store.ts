@@ -1,22 +1,16 @@
 import { configureStore, createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
-import type { Product } from './global';
-
-export interface UserState {
-  id: string;
-  username: string;
-  email: string;
-}
+import type { CartProduct,UserSession } from './global';
 
 interface ProductSliceState {
-  Products: Product[];
+  Products: CartProduct[];
 }
 
 type RootState = ReturnType<typeof store.getState>;
 
 /* State */
 
-const initialState: UserState = {
+const initialState: UserSession = {
   id: '',
   username: '',
   email: '',
@@ -32,7 +26,7 @@ const userSlice = createSlice({
   name: 'user',
   initialState,
   reducers: {
-    auth: (state, action: PayloadAction<UserState>) => {
+    auth: (state, action: PayloadAction<UserSession>) => {
       state.username = action.payload.username;
       state.email = action.payload.email;
       state.id = action.payload.id;
@@ -49,7 +43,7 @@ const productSlice = createSlice({
   name: 'Cart',
   initialState: productInititalState,
   reducers: {
-    add: (state, action: PayloadAction<Product>) => {
+    add: (state, action: PayloadAction<CartProduct>) => {
       state.Products.push(action.payload);
     },
     remove: (state, action: PayloadAction<number>) => {
@@ -72,8 +66,8 @@ const store = configureStore({
   },
 });
 
-export const selectUser = (state: RootState): UserState => state.user;
+export const selectUser = (state: RootState): UserSession => state.user;
 
-export const selectCart = (state: RootState): Product[] => state.cart.Products;
+export const selectCart = (state: RootState): CartProduct[] => state.cart.Products;
 
 export default store;
