@@ -3,10 +3,12 @@ import './form.css';
 import axios, { AxiosResponse } from 'axios';
 import { Formik, Form, Field } from 'formik';
 import { useNavigate } from 'react-router-dom';
-import { useSelector, useDispatch } from 'react-redux';
-import store, { selectUser, auth, logout } from '../../store';
-import type { UserState } from '../../store';
-import { SERVER_URL } from '../../config';
+import { useSelector,useDispatch } from 'react-redux';
+import store,{ selectUser,auth,logout } from '../../store';
+import type {UserState} from '../../store';
+import urls from '../../config'
+import { z } from 'zod'
+import {toFormikValidationSchema} from 'zod-formik-adapter';
 
 export default function Auth(): JSX.Element {
   const userInfo = useSelector(selectUser);
@@ -29,7 +31,8 @@ export default function Auth(): JSX.Element {
 
   const navigate = useNavigate();
   const instance = axios.create({
-    baseURL: `${SERVER_URL}`,
+    // baseURL: 'http://localhost:3001/api',
+    baseURL: `${urls.SERVER_URL}`,
     withCredentials: true,
   });
 
@@ -41,7 +44,25 @@ export default function Auth(): JSX.Element {
     address?: string;
   }
 
-  const onSubmit = async (values: AuthFormValues): Promise<void> => {
+  const schema = isSignIn
+  ? z.object({
+      email: z.string().email('Please enter a valid email address'),
+      password: z.string().min(8, 'Password must be at least 8 characters long'),
+    })
+  : z.object({
+      username: z.string().min(3, 'Username must be at least 3 characters long'),
+      email: z.string().email('Please enter a valid email address'),
+      address: z.string(),
+      password: z.string().min(8, 'Password must be at least 8 characters long'),
+      passwordConfirm: z.string().min(8)
+      })
+      .refine((val) => val.password === val.passwordConfirm, {
+        message: "Passwords don't match",
+        path: ["passwordConfirm"]
+      })
+      
+  const onSubmit = async (values:AuthFormValues): Promise<void> => {
+    
     try {
       const response = isSignIn
         ? await instance.post('/login', {
@@ -76,53 +97,60 @@ export default function Auth(): JSX.Element {
 
   return (
     <Formik
-      initialValues={{
-        username: '',
-        email: '',
-        password: '',
-        passwordConfirm: '',
-        address: '',
-      }}
-      onSubmit={async (values) => {
-        await onSubmit(values);
-      }}
-    >
-      {({ values, handleChange, handleBlur, handleSubmit }) => (
-        <div className="Auth">
-          <div className="Container bg-indigo-500">
-            <h2>{isSignIn ? 'Sign In' : 'Sign up'}</h2>
-            <div className="Toggle">
-              <div
-                className={isSignIn ? 'ToggleBtn Active' : 'ToggleBtn'}
-                onClick={toggleSwitch}
-              />
-              <div
-                className={!isSignIn ? 'ToggleBtn Active' : 'ToggleBtn'}
-                onClick={toggleSwitch}
-              />
-            </div>
-            <Form>
-              <label>Username: </label>
-              <Field
-                type="text"
-                name="username"
-                value={values.username}
-                onChange={handleChange}
-              />
+        initialValues={{
+          username: '',
+          email: '',
+          password: '',
+          passwordConfirm: '',
+          address: ''
+        }}
+        onSubmit={async (values) => {
+          await onSubmit(values);
+        }}
+        validationSchema={toFormikValidationSchema(schema)}
+      >
 
-              {isSignIn ? null : (
-                <>
-                  <label>Email: </label>
-                  <Field
-                    type="text"
-                    name="email"
-                    value={values.email}
-                    onChange={handleChange}
-                  />
-                </>
-              )}
+    {({ values, handleChange, handleBlur, handleSubmit }) => (
+    <div className="Auth">
+      <div className="Container bg-indigo-500">
+        <h2>{isSignIn?'Sign In' : 'Sign up'}</h2>
+        <div className="Toggle">
+          <div
+            className={isSignIn ? 'ToggleBtn Active' : 'ToggleBtn'}
+            onClick={toggleSwitch}
+          />
+          <div
+            className={!isSignIn ? 'ToggleBtn Active' : 'ToggleBtn'}
+            onClick={toggleSwitch}
+          />
+        </div>
+        <Form>
+        {isSignIn ? null : (
+          <>
+          <label>Username: </label>
+          <Field type="text" 
+                 name="username" 
+                 value={values.username} 
+                 onChange={handleChange} />
+          </>
+        )}
 
-              <label>Password: </label>
+          <label>Email: </label>
+          <Field type="text" 
+                 name="email" 
+                 value={values.email} 
+                 onChange={handleChange} />
+      
+
+          <label>Password: </label>
+          <Field type="password" 
+                 name="password" 
+                 value={values.password} 
+                 onChange={handleChange} />
+
+          {isSignIn ? null : (
+            <>
+              <label>Confirm Password: </label>
               <Field
                 type="password"
                 name="password"
