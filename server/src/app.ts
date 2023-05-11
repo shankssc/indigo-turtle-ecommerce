@@ -1,6 +1,6 @@
 // 3rd Party
 import express from 'express';
-import session from 'cookie-session';
+import cookieSession from 'cookie-session';
 import passport from 'passport';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
@@ -16,6 +16,7 @@ import stripeWebhookRoute from '@/routes/stripeWebhookRoute';
 import envConfig from '@/config/envConfig';
 import { maybeExclude } from './utils/maybeExclude';
 import { onlyInclude } from './utils/maybeInclude';
+import config from '@/config/envConfig';
 
 const { CLIENT_URL } = envConfig;
 
@@ -29,10 +30,15 @@ const app = express();
 console.log(CLIENT_URL);
 
 app.use(maybeExclude(express.json(), ['/api/stripeWebhook']) as any);
-app.use(cors({ origin: CLIENT_URL, credentials: true }));
+app.use(
+  cors({
+    origin: CLIENT_URL,
+    credentials: true,
+  })
+);
 app.use('/api/stripeWebhook', express.raw({ type: '*/*' }));
 app.use(express.json());
-app.use(session(sessionOptions));
+app.use(cookieSession(sessionOptions));
 app.use(cookieParser());
 
 // passport

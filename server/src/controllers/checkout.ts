@@ -85,6 +85,9 @@ export const checkout = async (req: Request, res: Response) => {
     return res.status(400).json({ errors: body.error.issues });
 
   const products = body.data.products;
+  if (products.length === 0)
+    return res.status(409).json({ errors: 'No product in cart' });
+
   const session = await createStripeSession(products);
   if (typeof session === 'string')
     return res.status(500).json({ errors: session });

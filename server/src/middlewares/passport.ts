@@ -37,7 +37,6 @@ passport.deserializeUser(async (id: number, done) => {
 });
 
 export const isLoggedIn = (req: Request, res: Response, next: NextFunction) => {
-  console.log('checking...');
   if (!req.isAuthenticated()) return res.status(401);
   return next();
 };

@@ -3,13 +3,42 @@
 /* eslint-disable @typescript-eslint/consistent-type-definitions */
 import React from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
-import { NavItems, NavItemsProps, NavProps } from '../../global';
+import {
+  CartProduct,
+  NavItems,
+  NavItemsProps,
+  NavProps,
+  Product,
+} from '../../global';
 import { useSelector } from 'react-redux';
 import { selectCart, selectUser } from '../../store';
 import { IconType } from 'react-icons';
 import axios from 'axios';
-import urls from '../../config';
+import { CORS_CONFIG, SERVER_URL_FINAL } from '../../config';
 import { spawn } from 'child_process';
+
+const TEMP_CHECKOUT_PRODUCT_LIST = [
+  {
+    name: 'LIDYUK End Table with Charging Station, Flip Top Side Table',
+    userId: 2,
+    quantity: 5,
+  },
+  {
+    name: 'testproduct1',
+    userId: 1,
+    quantity: 1,
+  },
+  {
+    name: 'testproduct2',
+    userId: 1,
+    quantity: 4,
+  },
+  {
+    name: 'myproduct',
+    userId: 2,
+    quantity: 2,
+  },
+];
 
 interface CheckoutProductData {
   name: string;
@@ -52,15 +81,26 @@ const CartLink = ({
     quantity: prod.quantity,
   }));
 
-  const getCheckout = async (): Promise<string> =>
-    await axios.post(`${urls.SERVER_URL_FINAL}/api/checkout`, { products: prods });
+  const getCheckout = async (
+    prods: CartProduct[]
+  ): Promise<string | undefined> =>
+    (
+      await axios.post(
+        `${SERVER_URL_FINAL}/checkout`,
+        { products: prods },
+        CORS_CONFIG
+      )
+    )?.data.url;
 
   const cartClicked = (): void => {
     (async (): Promise<void> => {
-      console.log(urls.SERVER_URL_FINAL);
-      const url = await getCheckout();
-      console.log(url);
-      window.open(url);
+      const prods = cart as unknown as CartProduct[]; // FIXME: Remove this type conversion once shankssc merges his Redux Store changes
+      // const prods: CartProduct[] = TEMP_CHECKOUT_PRODUCT_LIST;
+
+      if (prods.length === 0) return;
+      const url: string | undefined = await getCheckout(prods);
+      if (url === undefined) return;
+      window.location.href = url;
     })().catch((err) => {
       console.error(err);
     });

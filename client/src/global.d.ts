@@ -22,6 +22,12 @@ interface Product {
   image: string | null;
 }
 
+interface CartProduct {
+  name: string;
+  userId: number;
+  quantity: number;
+}
+
 interface NavItemsProps {
   name?: string | string[];
   icon?: ReactNode | ReactNode[];

@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { useSelector,useDispatch } from 'react-redux';
 import store,{ selectUser,auth,logout } from '../../store';
 import type { UserSession } from '../../global';
-import urls from '../../config'
+import { SERVER_URL_FINAL } from '../../config';
 import { z } from 'zod'
 import {toFormikValidationSchema} from 'zod-formik-adapter';
 
@@ -33,7 +33,7 @@ export default function Auth(): JSX.Element {
   const navigate = useNavigate();
   const instance = axios.create({
     // baseURL: 'http://localhost:3001/api',
-    baseURL: `${urls.SERVER_URL_FINAL}`,
+    baseURL: `${SERVER_URL_FINAL}`,
     withCredentials: true,
   });
 
@@ -67,7 +67,7 @@ export default function Auth(): JSX.Element {
     try {
       const response = isSignIn
         ? await instance.post('/login', {
-            email: values.email,
+            email: values.username,
             password: values.password,
           })
         : await instance.post('/register', {
@@ -86,7 +86,7 @@ export default function Auth(): JSX.Element {
       dispatch(auth(payload));
 
       console.log('User registered successfully');
-      navigate('/ProductPage');
+      navigate('/');
     } catch (error) {
       console.error(error);
     }

@@ -5,13 +5,13 @@ import { useNavigate } from 'react-router-dom';
 import type { Product } from '../../global';
 import './form.css';
 import marketImage from './market.png';
-import urls from '../../config'
+import { SERVER_URL_FINAL } from '../../config';
 
 export default function CreateProdPage(): JSX.Element {
   const navigate = useNavigate();
   const instance = axios.create({
     // baseURL: 'http://localhost:3001/api',
-    baseURL: `${urls.SERVER_URL_FINAL}`,
+    baseURL: `${SERVER_URL_FINAL}`,
     withCredentials: true,
   });
 
