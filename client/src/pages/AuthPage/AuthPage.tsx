@@ -12,6 +12,7 @@ import {toFormikValidationSchema} from 'zod-formik-adapter';
 
 export default function Auth(): JSX.Element {
   const userInfo = useSelector(selectUser);
+  
 
   const dispatch = useDispatch();
   const [isSignIn, setIsSignIn] = useState<boolean>(true);
