@@ -1,9 +1,9 @@
 import axios from 'axios';
-import urls from '../config';
+import {SERVER_URL_FINAL} from '../config';
 import type { Product } from '../types';
 
 const instance = axios.create({
-  baseURL: urls.SERVER_URL_FINAL, // TODO: add it in env variables
+  baseURL: SERVER_URL_FINAL, // TODO: add it in env variables
   withCredentials: true,
 });
 

@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import type { Product } from '../../global';
 import './form.css';
 import marketImage from './market.png';
-import { SERVER_URL_FINAL } from '../../config';
+import { SERVER_URL_FINAL, CORS_CONFIG } from '../../config';
 
 export default function CreateProdPage(): JSX.Element {
   const navigate = useNavigate();
@@ -86,14 +86,11 @@ export default function CreateProdPage(): JSX.Element {
                   />
 
                   <label>Image: </label>
-                  <input
-                    type="file"
+                  <Field
+                    type="text"
                     name="image"
-                    onChange={(event) => {
-                      if (event.currentTarget.files !== null) {
-                        setFieldValue('image', event.currentTarget.files[0]);
-                      }
-                    }}
+                    value={values.image}
+                    onChange={handleChange}
                   />
 
                   <div className="submit">

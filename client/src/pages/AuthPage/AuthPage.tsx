@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { useSelector,useDispatch } from 'react-redux';
 import store,{ selectUser,auth,logout } from '../../store';
 import type { UserSession } from '../../global';
-import { SERVER_URL_FINAL } from '../../config';
+import { SERVER_URL_FINAL, CORS_CONFIG } from '../../config';
 import { z } from 'zod'
 import {toFormikValidationSchema} from 'zod-formik-adapter';
 
@@ -35,6 +35,7 @@ export default function Auth(): JSX.Element {
     // baseURL: 'http://localhost:3001/api',
     baseURL: `${SERVER_URL_FINAL}`,
     withCredentials: true,
+    
   });
 
   interface AuthFormValues {
@@ -69,14 +70,14 @@ export default function Auth(): JSX.Element {
         ? await instance.post('/login', {
             email: values.username,
             password: values.password,
-          })
+          }, CORS_CONFIG)
         : await instance.post('/register', {
             username: values.username,
             email: values.email,
             password: values.password,
             passwordConfirm: values.passwordConfirm,
             address: values.address,
-          });
+          }, CORS_CONFIG);
 
       const payload: UserSession = {
         id: response.data.id,
