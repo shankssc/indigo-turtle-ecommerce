@@ -2,7 +2,7 @@ import React from 'react';
 import axios, { AxiosResponse } from 'axios';
 import { Formik, Form, Field } from 'formik';
 import { useNavigate } from 'react-router-dom';
-import { type Product } from '../../global';
+import type { Product } from '../../global';
 import './form.css';
 import marketImage from './market.png';
 

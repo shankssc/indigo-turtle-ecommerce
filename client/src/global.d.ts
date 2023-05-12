@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import '@prisma/client';
 import { type } from 'os';
-import { type ReactNode } from 'react';
+import type { ReactNode } from 'react';
 import { To } from 'react-router-dom';
 
 interface User {
@@ -17,9 +17,15 @@ interface Product {
   id?: number;
   name: string;
   description: string | null;
-  price: Decimal;
+  price: number;
   quantity: number;
   image: string | null;
+}
+
+interface CartProduct {
+  name: string;
+  userId: number;
+  quantity: number;
 }
 
 interface NavItemsProps {

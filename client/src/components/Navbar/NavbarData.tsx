@@ -3,13 +3,42 @@
 /* eslint-disable @typescript-eslint/consistent-type-definitions */
 import React from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
-import { NavItems, NavItemsProps, NavProps } from '../../global';
+import {
+  CartProduct,
+  NavItems,
+  NavItemsProps,
+  NavProps,
+  Product,
+} from '../../global';
 import { useSelector } from 'react-redux';
 import { selectCart, selectUser } from '../../store';
 import { IconType } from 'react-icons';
 import axios from 'axios';
-import { SERVER_URL } from '../../config';
+import { CORS_CONFIG, SERVER_URL } from '../../config';
 import { spawn } from 'child_process';
+
+const TEMP_CHECKOUT_PRODUCT_LIST = [
+  {
+    name: 'LIDYUK End Table with Charging Station, Flip Top Side Table',
+    userId: 2,
+    quantity: 5,
+  },
+  {
+    name: 'testproduct1',
+    userId: 1,
+    quantity: 1,
+  },
+  {
+    name: 'testproduct2',
+    userId: 1,
+    quantity: 4,
+  },
+  {
+    name: 'myproduct',
+    userId: 2,
+    quantity: 2,
+  },
+];
 
 interface CheckoutProductData {
   name: string;
@@ -42,7 +71,7 @@ const CartLink = ({
 }): JSX.Element => {
   const cart = useSelector(selectCart);
   const user = useSelector(selectUser);
-  if (user === '') {
+  if (user.username === '') {
     console.error('User not defined while initializing CartLink component.');
     return <></>;
   }
@@ -52,20 +81,38 @@ const CartLink = ({
     quantity: prod.quantity,
   }));
 
-  const getCheckout = async (): Promise<string> =>
-    await axios.post(`${SERVER_URL}/api/checkout`, { products: prods });
+  const getCheckout = async (
+    prods: CartProduct[]
+  ): Promise<string | undefined> =>
+    (
+      await axios.post(
+        `${SERVER_URL}/checkout`,
+        { products: prods },
+        CORS_CONFIG
+      )
+    )?.data.url;
 
   const cartClicked = (): void => {
     (async (): Promise<void> => {
-      const url = await getCheckout();
-      window.open(url);
+      const prods = cart as unknown as CartProduct[]; // FIXME: Remove this type conversion once shankssc merges his Redux Store changes
+      // const prods: CartProduct[] = TEMP_CHECKOUT_PRODUCT_LIST;
+
+      if (prods.length === 0) return;
+      const url: string | undefined = await getCheckout(prods);
+      if (url === undefined) return;
+      window.location.href = url;
     })().catch((err) => {
       console.error(err);
     });
   };
 
   return (
-    <button onClick={() => getCheckout} className={className}>
+    <button
+      onClick={() => {
+        cartClicked();
+      }}
+      className={className}
+    >
       <span>{cartProps.icon}</span>
       <span>{cartProps.name}</span>
       <span>{cart.length}</span>
@@ -75,7 +122,7 @@ const CartLink = ({
 
 export const NavList = (props: NavItems) => {
   const navigate = useNavigate();
-  const username = useSelector(selectUser);
+  const user = useSelector(selectUser);
   const NAVLINK_CLASS =
     'inline-flex items-center gap-2 duration-150 hover:text-secondary-light';
   const USERNAME_CLASS = 'inline-flex items-center duration-150 text-xl';
@@ -98,7 +145,7 @@ export const NavList = (props: NavItems) => {
           </NavLink>
         )
       )}
-      {username === '' ? (
+      {user.username === '' ? (
         <span
           className={LOGIN_CLASS}
           onClick={() => {
@@ -108,7 +155,7 @@ export const NavList = (props: NavItems) => {
           Login
         </span>
       ) : (
-        <span className={USERNAME_CLASS}>{username}</span>
+        <span className={USERNAME_CLASS}>{user.username}</span>
       )}
     </div>
   );

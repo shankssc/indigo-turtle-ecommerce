@@ -47,6 +47,7 @@
     "bcryptjs": "^2.4.3",
     "cookie-parser": "^1.4.6",
     "cookie-session": "^2.0.0",
+    "cookie-sessions": "^0.0.2",
     "cors": "^2.8.5",
     "esbuild-register": "^3.4.2",
     "express": "^4.18.2",
@@ -56,7 +57,7 @@
     "passport-local": "^1.0.0",
     "prisma": "^4.13.0",
     "server.js": "^1.0.0",
-    "stripe": "^12.3.0",
+    "stripe": "^12.4.0",
     "zod": "^3.21.4"
   }
 }

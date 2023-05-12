@@ -31,7 +31,7 @@ const navProps: NavProps[] = [
 ];
 
 export function Navbar(): JSX.Element {
-  const username = useSelector(selectUser);
+  const user = useSelector(selectUser);
 
   return (
     <nav className="Navbar">

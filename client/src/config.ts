@@ -1,4 +1,11 @@
 export const SERVER_URL =
   process.env.NODE_ENV === 'development'
-    ? 'localhost:3001'
-    : 'https://drab-pink-dalmatian-gear.cyclic.app';
+    ? 'http://localhost:3001/api'
+    : 'https://drab-pink-dalmatian-gear.cyclic.app/api';
+
+export const CORS_CONFIG = {
+  headers: {
+    'Content-Type': 'application/json',
+  },
+  withCredentials: true,
+};

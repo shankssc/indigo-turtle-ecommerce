@@ -1,8 +1,6 @@
-import React, { useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import store, { selectUser, selectCart } from '../../store';
+import React, { useEffect, useState } from 'react';
+import type { Product } from '../../types';
 import productService from '../../services/productService';
-import { setProducts } from '../../reducers/productReducer';
 import { Link } from 'react-router-dom';
 
 const shortenString = (text: string): string => {
@@ -11,18 +9,17 @@ const shortenString = (text: string): string => {
 };
 
 export default function HomePage(): JSX.Element {
-  const products = useSelector(selectCart);
-  const dispatch = useDispatch();
+  const [products, setProducts] = useState<Product[]>([]);
 
   useEffect(() => {
     const initializeProduct = async (): Promise<void> => {
       const products = await productService.getAll();
-      dispatch(setProducts(products));
+      setProducts(products);
     };
     initializeProduct().catch((err) => {
       console.log(err);
     });
-  }, [dispatch]);
+  }, []);
 
   return (
     <>
