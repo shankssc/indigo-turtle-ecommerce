@@ -97,7 +97,10 @@ const CartLink = ({
       const prods = cart as unknown as CartProduct[]; // FIXME: Remove this type conversion once shankssc merges his Redux Store changes
       // const prods: CartProduct[] = TEMP_CHECKOUT_PRODUCT_LIST;
 
-      if (prods.length === 0) return;
+      if (prods.length === 0) {
+        alert('No item in cart.');
+        return;
+      }
       const url: string | undefined = await getCheckout(prods);
       if (url === undefined) return;
       window.location.href = url;
