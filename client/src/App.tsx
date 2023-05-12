@@ -7,27 +7,25 @@ import AuthPage from './pages/AuthPage/AuthPage';
 import ProductPage from './pages/ProductPage/ProductPage';
 import CheckoutPage from './pages/CheckoutPage/CheckoutPage';
 import CreateProdPage from './pages/CreateProdPage/CreateProdPage';
-import { Provider } from 'react-redux'
+import { Provider } from 'react-redux';
 import store from './store';
 
 function App(): JSX.Element {
   return (
     <Provider store={store}>
-    <div className="App">
-      <Navbar />
-      <Routes>
-        <Route path="HomePage" element={<HomePage />} />
-        <Route path="ProductPage" element={<ProductPage />} />
-        <Route path="AboutPage" element={<AboutPage />} />
-        <Route path="CheckoutPage" element={<CheckoutPage />} />
-        <Route path="AuthPage" element={<AuthPage />} />
-        <Route path="createProduct" element={<CreateProdPage />}  />
-      </Routes>
-
-    </div>
-      </Provider>
-
-  )
+      <div className="App">
+        <Navbar />
+        <Routes>
+          <Route path="HomePage" element={<HomePage />} />
+          <Route path="ProductPage" element={<ProductPage />} />
+          <Route path="AboutPage" element={<AboutPage />} />
+          <Route path="CheckoutPage" element={<CheckoutPage />} />
+          <Route path="AuthPage" element={<AuthPage />} />
+          <Route path="createProduct" element={<CreateProdPage />} />
+        </Routes>
+      </div>
+    </Provider>
+  );
 }
 /* <Navbar /> */
 export default App;
