@@ -6,7 +6,7 @@ export const login = async (req: Request, res: Response) => {
   const fields = loginFieldSchema().safeParse(req.body);
 
   if (fields.success === false)
-    return res.status(400).json({ errors: fields.error.issues });
+    return res.status(400).json({ errors: 'Wrong Login Schema' });
 
   if (req.isAuthenticated()) {
     return res.send(req.user);
