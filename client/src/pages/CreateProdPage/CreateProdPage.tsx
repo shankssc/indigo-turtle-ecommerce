@@ -1,11 +1,11 @@
 import React from 'react';
-import axios, { AxiosResponse } from 'axios';
+import axios from 'axios';
 import { Formik, Form, Field } from 'formik';
 import { useNavigate } from 'react-router-dom';
 import type { Product } from '../../global';
 import './form.css';
 import marketImage from './market.png';
-import { SERVER_URL_FINAL, CORS_CONFIG } from '../../config';
+import { SERVER_URL_FINAL } from '../../config';
 
 export default function CreateProdPage(): JSX.Element {
   const navigate = useNavigate();

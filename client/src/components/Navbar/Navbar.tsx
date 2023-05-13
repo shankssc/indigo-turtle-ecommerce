@@ -5,7 +5,7 @@ import store, {
   auth,
   logout,
 } from '../../store';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import TurtleLogo from './TurtleLogo.png';
 import { FaInfoCircle, FaShoppingCart, FaStore } from 'react-icons/fa';
 import { Logo, NavList, SiteName } from './NavbarData';
