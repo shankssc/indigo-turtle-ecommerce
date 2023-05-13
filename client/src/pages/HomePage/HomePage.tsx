@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import type { Product } from '../../types';
 import productService from '../../services/productService';
 import { Link } from 'react-router-dom';
+import defaultImg from './no_img.png';
 
 const shortenString = (text: string): string => {
   if (text.length > 103) return text.slice(0, 101).concat('...');
@@ -24,7 +25,7 @@ export default function HomePage(): JSX.Element {
   return (
     <>
       {products.length > 0 && (
-        <div className=" flex w-screen flex-row justify-center bg-neutral-white">
+        <div className="min-h-[calc(100vh-104px)] flex w-screen flex-row justify-center bg-neutral-white">
           <main className="mt-6 flex max-w-screen-xl flex-wrap justify-center gap-x-8 gap-y-5">
             {products.map((product) => (
               <Link
@@ -35,7 +36,7 @@ export default function HomePage(): JSX.Element {
                 <figure className="w-60">
                   <img
                     className="h-52 w-full border-4 border-neutral-gray"
-                    src={product.image ?? ''}
+                    src={product.image ?? defaultImg}
                     alt="Product"
                   />
                   <div className="flex h-36 flex-col justify-between bg-neutral-gray">

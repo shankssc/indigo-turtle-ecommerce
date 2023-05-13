@@ -37,11 +37,8 @@ export function Navbar(): JSX.Element {
     <nav className="Navbar">
       <div className="flex justify-between gap-4 p-4">
         <div className="flex items-center gap-6">
-          <Logo
-            image={<img src={TurtleLogo} alt="Turtle Logo" />}
-            path={'/HomePage'}
-          />
-          <SiteName name={'IndigoList'} path={'/HomePage'} />
+          <Logo image={<img src={TurtleLogo} alt="Turtle Logo" />} path={'/'} />
+          <SiteName name={'IndigoList'} path={'/'} />
         </div>
         <div className="mr-24 flex items-center">
           <NavList items={navProps} />

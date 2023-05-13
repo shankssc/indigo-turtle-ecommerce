@@ -12,4 +12,9 @@ const getAll = async (): Promise<Product[]> => {
   return data;
 };
 
-export default { getAll };
+const getById = async (id: number): Promise<Product> => {
+  const { data } = await instance.get<Product>(`/products/${id}`);
+  return data;
+};
+
+export default { getAll, getById };
