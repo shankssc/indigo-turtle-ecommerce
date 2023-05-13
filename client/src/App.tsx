@@ -17,7 +17,6 @@ function App(): JSX.Element {
         <Navbar />
         <Routes>
           <Route path="/" element={<HomePage />} />
-          <Route path="HomePage" element={<HomePage />} />
           <Route path="ProductPage/:id" element={<ProductPage />} />
           <Route path="AboutPage" element={<AboutPage />} />
           <Route path="CheckoutPage" element={<CheckoutPage />} />
