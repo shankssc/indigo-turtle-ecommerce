@@ -50,3 +50,15 @@ interface Contact {
   title: string;
   price: number;
 }
+
+interface CartProduct {
+  name: string;
+  userId: number;
+  quantity: number;
+}
+
+interface UserSession {
+  id: string;
+  username: string;
+  email: string;
+}

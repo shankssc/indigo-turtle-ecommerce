@@ -1,6 +1,5 @@
 import React from 'react';
 import store, {
-  UserState,
   selectCart,
   selectUser,
   auth,
@@ -10,7 +9,8 @@ import { useSelector, useDispatch } from 'react-redux';
 import TurtleLogo from './TurtleLogo.png';
 import { FaInfoCircle, FaShoppingCart, FaStore } from 'react-icons/fa';
 import { Logo, NavList, SiteName } from './NavbarData';
-import { type NavProps } from '../../global';
+import { type NavProps, UserSession } from '../../global';
+
 
 const navProps: NavProps[] = [
   {

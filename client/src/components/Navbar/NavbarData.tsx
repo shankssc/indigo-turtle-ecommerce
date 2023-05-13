@@ -14,7 +14,7 @@ import { useSelector } from 'react-redux';
 import { selectCart, selectUser } from '../../store';
 import { IconType } from 'react-icons';
 import axios from 'axios';
-import { CORS_CONFIG, SERVER_URL } from '../../config';
+import { CORS_CONFIG, SERVER_URL_FINAL } from '../../config';
 import { spawn } from 'child_process';
 
 const TEMP_CHECKOUT_PRODUCT_LIST = [
@@ -86,7 +86,7 @@ const CartLink = ({
   ): Promise<string | undefined> =>
     (
       await axios.post(
-        `${SERVER_URL}/checkout`,
+        `${SERVER_URL_FINAL}/checkout`,
         { products: prods },
         CORS_CONFIG
       )

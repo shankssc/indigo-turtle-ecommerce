@@ -3,13 +3,16 @@ import './form.css';
 import axios, { AxiosResponse } from 'axios';
 import { Formik, Form, Field } from 'formik';
 import { useNavigate } from 'react-router-dom';
-import { useSelector, useDispatch } from 'react-redux';
-import store, { selectUser, auth, logout } from '../../store';
-import type { UserState } from '../../store';
-import { SERVER_URL } from '../../config';
+import { useSelector,useDispatch } from 'react-redux';
+import store,{ selectUser,auth,logout } from '../../store';
+import type { UserSession } from '../../global';
+import { SERVER_URL_FINAL, CORS_CONFIG } from '../../config';
+import { z } from 'zod'
+import {toFormikValidationSchema} from 'zod-formik-adapter';
 
 export default function Auth(): JSX.Element {
   const userInfo = useSelector(selectUser);
+  
 
   const dispatch = useDispatch();
   const [isSignIn, setIsSignIn] = useState<boolean>(true);
@@ -29,8 +32,10 @@ export default function Auth(): JSX.Element {
 
   const navigate = useNavigate();
   const instance = axios.create({
-    baseURL: `${SERVER_URL}`,
+    // baseURL: 'http://localhost:3001/api',
+    baseURL: `${SERVER_URL_FINAL}`,
     withCredentials: true,
+    
   });
 
   interface AuthFormValues {
@@ -41,22 +46,40 @@ export default function Auth(): JSX.Element {
     address?: string;
   }
 
-  const onSubmit = async (values: AuthFormValues): Promise<void> => {
+  const schema = isSignIn
+  ? z.object({
+      email: z.string().email('Please enter a valid email address'),
+      password: z.string().min(8, 'Password must be at least 8 characters long'),
+    })
+  : z.object({
+      username: z.string().min(3, 'Username must be at least 3 characters long'),
+      email: z.string().email('Please enter a valid email address'),
+      address: z.string(),
+      password: z.string().min(8, 'Password must be at least 8 characters long'),
+      passwordConfirm: z.string().min(8)
+      })
+      .refine((val) => val.password === val.passwordConfirm, {
+        message: "Passwords don't match",
+        path: ["passwordConfirm"]
+      })
+      
+  const onSubmit = async (values:AuthFormValues): Promise<void> => {
+    
     try {
       const response = isSignIn
         ? await instance.post('/login', {
             email: values.username,
             password: values.password,
-          })
+          }, CORS_CONFIG)
         : await instance.post('/register', {
             username: values.username,
             email: values.email,
             password: values.password,
             passwordConfirm: values.passwordConfirm,
             address: values.address,
-          });
+          }, CORS_CONFIG);
 
-      const payload: UserState = {
+      const payload: UserSession = {
         id: response.data.id,
         username: response.data.username,
         email: response.data.email,
@@ -76,18 +99,20 @@ export default function Auth(): JSX.Element {
 
   return (
     <Formik
-      initialValues={{
-        username: '',
-        email: '',
-        password: '',
-        passwordConfirm: '',
-        address: '',
-      }}
-      onSubmit={async (values) => {
-        await onSubmit(values);
-      }}
-    >
-      {({ values, handleChange, handleBlur, handleSubmit }) => (
+        initialValues={{
+          username: '',
+          email: '',
+          password: '',
+          passwordConfirm: '',
+          address: ''
+        }}
+        onSubmit={async (values) => {
+          await onSubmit(values);
+        }}
+        validationSchema={toFormikValidationSchema(schema)}
+      >
+
+{({ values, handleChange, handleBlur, handleSubmit }) => (
         <div className="Auth">
           <div className="Container bg-indigo-500">
             <h2>{isSignIn ? 'Sign In' : 'Sign up'}</h2>
@@ -102,6 +127,8 @@ export default function Auth(): JSX.Element {
               />
             </div>
             <Form>
+            {isSignIn ? null : (
+                <>
               <label>Username: </label>
               <Field
                 type="text"
@@ -109,19 +136,18 @@ export default function Auth(): JSX.Element {
                 value={values.username}
                 onChange={handleChange}
               />
+              </>
+            )}
 
-              {isSignIn ? null : (
-                <>
-                  <label>Email: </label>
-                  <Field
-                    type="text"
-                    name="email"
-                    value={values.email}
-                    onChange={handleChange}
-                  />
-                </>
-              )}
-
+              
+              <label>Email: </label>
+              <Field
+                type="text"
+                name="email"
+                value={values.email}
+                onChange={handleChange}
+              />
+                
               <label>Password: </label>
               <Field
                 type="password"
