@@ -16,7 +16,7 @@ const navProps: NavProps[] = [
   {
     icon: <FaStore />,
     name: 'Sell Product',
-    path: '/ProductPage',
+    path: '/createProduct',
   },
   {
     icon: <FaInfoCircle />,
