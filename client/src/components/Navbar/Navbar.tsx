@@ -1,4 +1,5 @@
 import React from 'react';
+<<<<<<< HEAD
 import store, {
   selectCart,
   selectUser,
@@ -6,11 +7,14 @@ import store, {
   logout,
 } from '../../store';
 import { useSelector } from 'react-redux';
+=======
+import store, { selectCart, selectUser, auth, logout } from '../../store';
+import { useSelector, useDispatch } from 'react-redux';
+>>>>>>> 9bfb3af14cb021cec3ea9f62a7ad37a06c48bd70
 import TurtleLogo from './TurtleLogo.png';
 import { FaInfoCircle, FaShoppingCart, FaStore } from 'react-icons/fa';
 import { Logo, NavList, SiteName } from './NavbarData';
 import { type NavProps, UserSession } from '../../global';
-
 
 const navProps: NavProps[] = [
   {
@@ -34,7 +38,7 @@ export function Navbar(): JSX.Element {
   const user = useSelector(selectUser);
 
   return (
-    <nav className="Navbar">
+    <nav className="Navbar overflow-visible">
       <div className="flex justify-between gap-4 p-4">
         <div className="flex items-center gap-6">
           <Logo image={<img src={TurtleLogo} alt="Turtle Logo" />} path={'/'} />
