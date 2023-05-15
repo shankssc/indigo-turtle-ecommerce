@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/consistent-type-imports */
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 /* eslint-disable @typescript-eslint/consistent-type-definitions */
-import React from 'react';
+import React, { useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import {
   CartProduct,
@@ -10,12 +10,13 @@ import {
   NavProps,
   Product,
 } from '../../global';
-import { useSelector } from 'react-redux';
-import { selectCart, selectUser } from '../../store';
+import { useDispatch, useSelector } from 'react-redux';
+import { selectCart, selectUser, logout } from '../../store';
 import { IconType } from 'react-icons';
 import axios from 'axios';
 import { CORS_CONFIG, SERVER_URL_FINAL } from '../../config';
 import { spawn } from 'child_process';
+import { ActionCreatorWithoutPayload } from '@reduxjs/toolkit';
 
 const TEMP_CHECKOUT_PRODUCT_LIST = [
   {
@@ -125,12 +126,28 @@ const CartLink = ({
 
 export const NavList = (props: NavItems) => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const user = useSelector(selectUser);
+  const [signoutIsHidden, setSignoutIsHidden] = useState(true);
   const NAVLINK_CLASS =
     'inline-flex items-center gap-2 duration-150 hover:text-secondary-light';
-  const USERNAME_CLASS = 'inline-flex items-center duration-150 text-xl';
+  const USERNAME_CLASS =
+    'inline-flex items-center duration-150 text-xl relative';
   const LOGIN_CLASS =
     'inline-flex items-center gap-2 duration-150 hover:text-secondary-light';
+  const SIGNOUT_CLASS =
+    'rounded-lg bg-neutral-gray p-1 absolute top-[2.5ch] left-[-1.5ch] w-[8ch]';
+
+  const handleSignout = () => {
+    dispatch(logout());
+    setSignoutIsHidden(true);
+  };
+
+  const toggleSignoutButton = () => {
+    console.log(signoutIsHidden);
+    if (signoutIsHidden) setSignoutIsHidden(false);
+    else setSignoutIsHidden(true);
+  };
 
   return (
     <div className="NavLinks">
@@ -158,8 +175,20 @@ export const NavList = (props: NavItems) => {
           Login
         </span>
       ) : (
-        <span className={USERNAME_CLASS}>{user.username}</span>
+        <div className={USERNAME_CLASS}>
+          <button onClick={toggleSignoutButton}>{user.username}</button>
+          {signoutIsHidden ? (
+            ''
+          ) : (
+            <button onClick={handleSignout} className={SIGNOUT_CLASS}>
+              Sign out
+            </button>
+          )}
+        </div>
       )}
     </div>
   );
 };
+function dispatch(logout: ActionCreatorWithoutPayload<'user/logout'>) {
+  throw new Error('Function not implemented.');
+}

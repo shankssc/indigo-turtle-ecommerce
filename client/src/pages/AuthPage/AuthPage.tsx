@@ -3,16 +3,15 @@ import './form.css';
 import axios, { AxiosResponse } from 'axios';
 import { Formik, Form, Field } from 'formik';
 import { useNavigate } from 'react-router-dom';
-import { useSelector,useDispatch } from 'react-redux';
-import store,{ selectUser,auth,logout } from '../../store';
+import { useSelector, useDispatch } from 'react-redux';
+import store, { selectUser, auth, logout } from '../../store';
 import type { UserSession } from '../../global';
 import { SERVER_URL_FINAL, CORS_CONFIG } from '../../config';
-import { z } from 'zod'
-import {toFormikValidationSchema} from 'zod-formik-adapter';
+import { z } from 'zod';
+import { toFormikValidationSchema } from 'zod-formik-adapter';
 
 export default function Auth(): JSX.Element {
   const userInfo = useSelector(selectUser);
-  
 
   const dispatch = useDispatch();
   const [isSignIn, setIsSignIn] = useState<boolean>(true);
@@ -35,7 +34,6 @@ export default function Auth(): JSX.Element {
     // baseURL: 'http://localhost:3001/api',
     baseURL: `${SERVER_URL_FINAL}`,
     withCredentials: true,
-    
   });
 
   interface AuthFormValues {
@@ -47,37 +45,51 @@ export default function Auth(): JSX.Element {
   }
 
   const schema = isSignIn
-  ? z.object({
-      email: z.string().email('Please enter a valid email address'),
-      password: z.string().min(8, 'Password must be at least 8 characters long'),
-    })
-  : z.object({
-      username: z.string().min(3, 'Username must be at least 3 characters long'),
-      email: z.string().email('Please enter a valid email address'),
-      address: z.string(),
-      password: z.string().min(8, 'Password must be at least 8 characters long'),
-      passwordConfirm: z.string().min(8)
+    ? z.object({
+        email: z.string().email('Please enter a valid email address'),
+        password: z
+          .string()
+          .min(8, 'Password must be at least 8 characters long'),
       })
-      .refine((val) => val.password === val.passwordConfirm, {
-        message: "Passwords don't match",
-        path: ["passwordConfirm"]
-      })
-      
-  const onSubmit = async (values:AuthFormValues): Promise<void> => {
-    
+    : z
+        .object({
+          username: z
+            .string()
+            .min(3, 'Username must be at least 3 characters long'),
+          email: z.string().email('Please enter a valid email address'),
+          address: z.string(),
+          password: z
+            .string()
+            .min(8, 'Password must be at least 8 characters long'),
+          passwordConfirm: z.string().min(8),
+        })
+        .refine((val) => val.password === val.passwordConfirm, {
+          message: "Passwords don't match",
+          path: ['passwordConfirm'],
+        });
+
+  const onSubmit = async (values: AuthFormValues): Promise<void> => {
     try {
       const response = isSignIn
-        ? await instance.post('/login', {
-            email: values.username,
-            password: values.password,
-          }, CORS_CONFIG)
-        : await instance.post('/register', {
-            username: values.username,
-            email: values.email,
-            password: values.password,
-            passwordConfirm: values.passwordConfirm,
-            address: values.address,
-          }, CORS_CONFIG);
+        ? await instance.post(
+            '/login',
+            {
+              email: values.email,
+              password: values.password,
+            },
+            CORS_CONFIG
+          )
+        : await instance.post(
+            '/register',
+            {
+              username: values.username,
+              email: values.email,
+              password: values.password,
+              passwordConfirm: values.passwordConfirm,
+              address: values.address,
+            },
+            CORS_CONFIG
+          );
 
       const payload: UserSession = {
         id: response.data.id,
@@ -99,20 +111,19 @@ export default function Auth(): JSX.Element {
 
   return (
     <Formik
-        initialValues={{
-          username: '',
-          email: '',
-          password: '',
-          passwordConfirm: '',
-          address: ''
-        }}
-        onSubmit={async (values) => {
-          await onSubmit(values);
-        }}
-        validationSchema={toFormikValidationSchema(schema)}
-      >
-
-{({ values, handleChange, handleBlur, handleSubmit }) => (
+      initialValues={{
+        username: '',
+        email: '',
+        password: '',
+        passwordConfirm: '',
+        address: '',
+      }}
+      onSubmit={async (values) => {
+        await onSubmit(values);
+      }}
+      validationSchema={toFormikValidationSchema(schema)}
+    >
+      {({ values, handleChange, handleBlur, handleSubmit }) => (
         <div className="Auth">
           <div className="Container bg-indigo-500">
             <h2>{isSignIn ? 'Sign In' : 'Sign up'}</h2>
@@ -127,19 +138,18 @@ export default function Auth(): JSX.Element {
               />
             </div>
             <Form>
-            {isSignIn ? null : (
+              {isSignIn ? null : (
                 <>
-              <label>Username: </label>
-              <Field
-                type="text"
-                name="username"
-                value={values.username}
-                onChange={handleChange}
-              />
-              </>
-            )}
+                  <label>Username: </label>
+                  <Field
+                    type="text"
+                    name="username"
+                    value={values.username}
+                    onChange={handleChange}
+                  />
+                </>
+              )}
 
-              
               <label>Email: </label>
               <Field
                 type="text"
@@ -147,7 +157,7 @@ export default function Auth(): JSX.Element {
                 value={values.email}
                 onChange={handleChange}
               />
-                
+
               <label>Password: </label>
               <Field
                 type="password"

@@ -17,7 +17,7 @@ export default function CreateProdPage(): JSX.Element {
 
   const onSubmit = async (values: Product): Promise<void> => {
     try {
-      await instance.post('/create', {
+      await instance.post('/products', {
         name: values.name,
         description: values.description,
         price: values.price,
@@ -28,7 +28,7 @@ export default function CreateProdPage(): JSX.Element {
       console.error(error);
     }
 
-    navigate('/home');
+    navigate('/');
   };
 
   return (
