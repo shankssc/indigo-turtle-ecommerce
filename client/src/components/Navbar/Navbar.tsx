@@ -1,16 +1,6 @@
 import React from 'react';
-<<<<<<< HEAD
-import store, {
-  selectCart,
-  selectUser,
-  auth,
-  logout,
-} from '../../store';
-import { useSelector } from 'react-redux';
-=======
 import store, { selectCart, selectUser, auth, logout } from '../../store';
 import { useSelector, useDispatch } from 'react-redux';
->>>>>>> 9bfb3af14cb021cec3ea9f62a7ad37a06c48bd70
 import TurtleLogo from './TurtleLogo.png';
 import { FaInfoCircle, FaShoppingCart, FaStore } from 'react-icons/fa';
 import { Logo, NavList, SiteName } from './NavbarData';
