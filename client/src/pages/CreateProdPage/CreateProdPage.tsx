@@ -28,7 +28,7 @@ export default function CreateProdPage(): JSX.Element {
       console.error(error);
     }
 
-    navigate('/home');
+    navigate('/');
   };
 
   return (
